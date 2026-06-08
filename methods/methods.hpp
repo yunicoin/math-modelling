@@ -13,7 +13,7 @@
 namespace mm {
 
 /* Сюда нужно вставить объявление серверной части алгоритма. */
-int HeatEquationMethod(const nlohmann::json& input,
+int EquationMethod(const nlohmann::json& input,
                        nlohmann::json* output);
 
 /* Конец вставки. */
