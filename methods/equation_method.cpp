@@ -1,5 +1,5 @@
 /**
- * @file methods/heat_equation_method.cpp
+ * @file methods/equation_method.cpp
  * @author Энгельгардт М
  *
  * @brief Серверный метод для задачи теплопроводности.
@@ -10,14 +10,14 @@
 
 #include <nlohmann/json.hpp>            // работа с JSON
 #include "abstract_solver_wrapper.hpp"  // обёртки Float/DoubleAbstractSolverWrapper
-#include "heat_equation_solver.hpp"     // наш класс HeatEquationSolver
+#include "quation_solver.hpp"     // наш класс EquationSolver
 #include "tasks_queue.hpp"              // класс очереди задач
 #include "methods.hpp"
 
 // Глобальная очередь, объявленная в methods/main.cpp
 extern mm::TasksQueue tasksQueue;
 
-int mm::HeatEquationMethod(const nlohmann::json& input,
+int mm::EquationMethod(const nlohmann::json& input,
                            nlohmann::json* output) {
   // 1) Достаём параметры. Если какого-то ключа нет, метод
   // at() кинет исключение.
@@ -27,7 +27,7 @@ int mm::HeatEquationMethod(const nlohmann::json& input,
   double exportPeriod = input.at("exportPeriod").get<double>();
 
   // 2) Создаём решалку
-  auto* solver = new mm::HeatEquationSolver<double>(M, tau,
+  auto* solver = new mm::EquationSolver<double>(M, tau,
                                                     finishTime, exportPeriod);
 
   // 3) Оборачиваем в DoubleAbstractSolverWrapper.
