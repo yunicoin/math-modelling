@@ -1,5 +1,5 @@
 /**
- * @file tests/heat_equation_test.cpp
+ * @file tests/equation_test.cpp
  * @author Энгельгардт М
  *
  * @brief Тесты для решателя уравнения теплопроводности.
@@ -12,7 +12,7 @@
 
 #include <cmath>
 #include <nlohmann/json.hpp>
-#include "heat_equation_solver.hpp"
+#include "equation_solver.hpp"
 #include "test_core.hpp"
 
 /**
@@ -27,7 +27,7 @@ static void TestBoundaryConditions() {
   const double tau = h * h / 4.0;   // шаг по времени (условие устойчивости)
   const double finishTime = tau;    // остановка после первого шага
 
-  mm::HeatEquationSolver<double> solver(M, tau, finishTime, tau);
+  mm::EquationSolver<double> solver(M, tau, finishTime, tau);
   nlohmann::json result;
   bool ok = solver.Solve(&result);
   REQUIRE(ok);  // Solve должен вернуть true
@@ -57,7 +57,7 @@ static void TestStability() {
   const double tau = h * h / 4.0;
   const double finishTime = 0.1;
 
-  mm::HeatEquationSolver<double> solver(M, tau, finishTime,
+  mm::EquationSolver<double> solver(M, tau, finishTime,
                                         finishTime * 2);
   nlohmann::json result;
   bool ok = solver.Solve(&result);
