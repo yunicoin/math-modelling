@@ -1,0 +1,68 @@
+"""
+Визуализатор температурного поля для задачи теплопроводности.
+Сохраняет анимацию контурных заливок.
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from abstract_plotter import AbstractPlotter
+
+
+class HeatEquationPlotter(AbstractPlotter):
+    def plot(self):
+        frames = self.data["data"]  # список временных слоёв
+        if not frames:
+            return
+
+        # Определяем размер сетки из первого кадра
+        sample = frames[0]["data"]["grid"]
+        N = len(sample)
+        x = np.linspace(0, 3, N)
+        y = np.linspace(0, 3, N)
+        X, Y = np.meshgrid(x, y)
+
+        # Преобразуем JSON-данные в numpy-массивы (null -> np.nan)
+        grids = []
+        times = []
+        for fr in frames:
+            t = fr["time"]
+            times.append(t)
+            grid = np.array([
+                [val if val is not None else np.nan for val in row]
+                for row in fr["data"]["grid"]
+            ])
+            grids.append(grid)
+
+        # Глобальные минимум и максимум для фиксированной цветовой шкалы
+        vmin = np.nanmin([np.nanmin(g) for g in grids])
+        vmax = np.nanmax([np.nanmax(g) for g in grids])
+
+        # Создаём фигуру
+        fig, ax = plt.subplots(figsize=(6, 6))
+        ax.set_xlim(0, 3)
+        ax.set_ylim(0, 3)
+        ax.set_aspect('equal')
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        cbar = None
+
+        def animate(i):
+            nonlocal cbar
+            ax.clear()
+            cont = ax.contourf(X, Y, grids[i], levels=30, cmap='hot',
+                               vmin=vmin, vmax=vmax)
+            if cbar is None:
+                cbar = plt.colorbar(cont, ax=ax, label='u')
+            ax.set_xlim(0, 3)
+            ax.set_ylim(0, 3)
+            ax.set_aspect('equal')
+            ax.set_title(f'Temperature t = {times[i]:.4f}')
+            ax.set_xlabel('x')
+            ax.set_ylabel('y')
+            return cont,
+
+        ani = animation.FuncAnimation(fig, animate, frames=len(grids),
+                                      interval=200, blit=False)
+        ani.save(self.output_path, writer='ffmpeg', fps=5)
+        plt.close(fig)
