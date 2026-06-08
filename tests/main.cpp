@@ -50,7 +50,10 @@ int main(int argc, char* argv[]) {
 
 
   /* Сюда нужно вставить вызов набора тестов для алгоритма. */
-
+    {
+    TestSuite suite("Heat Equation");
+    RUN_TEST(suite, TestHeatEquation);
+    }
 
   /* Конец вставки. */
 
