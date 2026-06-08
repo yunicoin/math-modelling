@@ -15,6 +15,8 @@
 
 using json = nlohmann::json;
 
+mm::TasksQueue tasksQueue;
+
 int main(int argc, char* argv[]) {
   // Порт по-умолчанию.
   int port = 8080;
@@ -30,7 +32,6 @@ int main(int argc, char* argv[]) {
 
   httplib::Server svr;
 
-  mm::TasksQueue tasksQueue;
 
   // Обработчик для GET запроса по адресу /stop. Этот обработчик
   // останавливает сервер.
@@ -109,7 +110,14 @@ int main(int argc, char* argv[]) {
 
   /* Сюда нужно вставить обработчик post запроса для алгоритма. */
 
-
+svr.Post("/HeatEquation", [&](const httplib::Request& req,
+                            httplib::Response& res) {
+  nlohmann::json input = nlohmann::json::parse(req.body);
+  nlohmann::json output;
+  int taskId = mm::HeatEquationMethod(input, &output);
+  output["id"] = taskId;
+  res.set_content(output.dump(), "application/json");
+});
 
 
   /* Конец вставки. */
