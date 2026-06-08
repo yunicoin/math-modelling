@@ -9,7 +9,7 @@ import matplotlib.animation as animation
 from abstract_plotter import AbstractPlotter
 
 
-class HeatEquationPlotter(AbstractPlotter):
+class EquationPlotter(AbstractPlotter):
     def plot(self):
         frames = self.data["data"]  # список временных слоёв
         if not frames:
