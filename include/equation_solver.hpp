@@ -1,5 +1,5 @@
 /**
- * @file include/heat_equation_solver.hpp
+ * @file include/equation_solver.hpp
  * @author Энгельгардт М
  *
  * @brief Явная разностная схема для двумерного уравнения теплопроводности
@@ -16,8 +16,8 @@
  *   после завершения всех потоков.
  */
 
-#ifndef INCLUDE_HEAT_EQUATION_SOLVER_HPP_
-#define INCLUDE_HEAT_EQUATION_SOLVER_HPP_
+#ifndef INCLUDE_EQUATION_SOLVER_HPP_
+#define INCLUDE_EQUATION_SOLVER_HPP_
 
 // Стандартные библиотеки
 #include <vector>    // для хранения значений на сетке
@@ -40,7 +40,7 @@ namespace mm {
  * реализован в базовом классе (метод Solve).
  */
 template<typename T>
-class HeatEquationSolver : AbstractSolver<T>(tau, finishTime, exportPeriod),
+class EquationSolver : AbstractSolver<T>(tau, finishTime, exportPeriod),
   M_(M),
   h_(static_cast<T>(1.0) / static_cast<T>(M)),
   u_((3 * M_ + 1) * (3 * M_ + 1)),  // 3M+1 узлов по каждой оси
@@ -57,7 +57,7 @@ class HeatEquationSolver : AbstractSolver<T>(tau, finishTime, exportPeriod),
    * @param finishTime -- конечное время моделирования.
    * @param exportPeriod -- интервал сохранения данных в единицах времени.
    */
-  HeatEquationSolver(size_t M, T tau, T finishTime, T exportPeriod);
+  EquationSolver(size_t M, T tau, T finishTime, T exportPeriod);
 
 
   /**
